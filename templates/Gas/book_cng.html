@@ -1,0 +1,118 @@
+{% extends 'booking/base.html' %}
+{% load custom_filters %}
+
+
+{% block title %}Book CNG{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <h2>Book CNG Slot</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Name*</label>
+        <input type="text" name="name" required>
+
+        <label for="city">City*</label>
+        <select name="city" id="city" required>
+            <option value="">Select your city</option>
+            {% for city in cities %}
+            <option value="{{ city.id }}">{{ city.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="station">Station*</label>
+        <select name="station" id="station" required>
+            <option value="">Select station</option>
+            {% for station in stations %}
+            <option value="{{ station.id }}" data-city="{{ station.city.id }}">{{ station.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="date">Date*</label>
+        <input type="date" name="date" required>
+
+        <label for="slot">Slot*</label>
+<select name="slot" required>
+    <option value="">Select slot</option>
+    {% for slot in slots %}
+        {% with count=booking_counts|get_item:slot.id %}
+            <option value="{{ slot.id }}" {% if count >= 6 %}disabled{% endif %}>
+                {{ slot.time }} - {{ count|default:0 }}/6 booked
+            </option>
+        {% endwith %}
+    {% endfor %}
+</select>
+
+        <button type="submit">Confirm Booking</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("city").addEventListener("change", function() {
+    var cityId = this.value;
+    var stationSelect = document.getElementById("station");
+    stationSelect.innerHTML = '<option value="">Select station</option>';
+    
+    {% for station in stations %}
+        if ("{{ station.city.id }}" == cityId) {
+            var option = document.createElement("option");
+            option.value = "{{ station.id }}";
+            option.textContent = "{{ station.name }}";
+            stationSelect.appendChild(option);
+        }
+    {% endfor %}
+});
+</script>
+
+<style>
+    .card-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+        margin: 50px auto;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 400px;
+        margin: auto;
+    }
+
+    label {
+        font-weight: bold;
+        text-align: left;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}

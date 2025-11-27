@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      background-color: #f2f2f2;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #1f1f1f, #2c3e50);
+      color: white;
+      height: 100vh;
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding-top: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      text-align: center;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      font-size: 22px;
+      font-weight: bold;
+      border-bottom: 1px solid #444;
+      position: relative;
+    }
+
+    .sidebar-header i {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .sidebar a, .sidebar button {
+      width: 100%;
+      padding: 15px 20px;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 16px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background 0.3s ease;
+      text-decoration: none;
+    }
+
+    .sidebar a i, .sidebar button i {
+      margin-right: 12px;
+    }
+
+    .sidebar a:hover, .sidebar button:hover {
+      background: #34495e;
+    }
+
+    .submenu {
+      display: none;
+      background: #3c3c3c;
+      padding-left: 20px;
+    }
+
+    .submenu a {
+      font-size: 14px;
+      padding: 10px 15px;
+    }
+
+    .dashboard-box {
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      padding: 18px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      border-radius: 6px;
+      margin: 10px 20px 20px 20px;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 30px;
+      width: 100%;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+      transition: margin-left 0.3s ease;
+    }
+
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 18px;
+      z-index: 1000;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .sidebar button {
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        border-radius: 8px;
+        margin: 10px 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-weight: 600;
+      }
+      
+      .sidebar button:hover {
+        background: linear-gradient(135deg, #2980b9, #27ae60);
+        transform: scale(1.02);
+      }
+      
+      .submenu a {
+        border-left: 3px solid #27ae60;
+        margin: 5px 0;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+      
+      .submenu a:hover {
+        background-color: #4a4a4a;
+        padding-left: 25px;
+      }
+      
+    .logout-btn {
+      margin-top: auto;
+      background: #e74c3c;
+      text-align: center;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Toggle Button -->
+  <button class="menu-toggle" onclick="toggleSidebar()">☰ Menu</button>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <a href="{% url 'dashboard' %}"><i class="fas fa-edit"></i> Dashboard</a>
+    </div>
+
+    <button onclick="toggleMenu('connection-menu')" style="margin-top: 55px;">
+      <i class="fas fa-link"></i> Connection
+    </button>
+    <div id="connection-menu" class="submenu">
+      <a href="{% url 'connection_request' %}"><i class="fas fa-edit"></i> Edit Connection</a>
+      <a href="{% url 'approved_connection' %}"><i class="fas fa-book"></i> Go for Booking</a>
+    </div>
+
+    <button onclick="toggleMenu('payment-menu')">
+      <i class="fas fa-credit-card"></i> Payment
+    </button>
+    <div id="payment-menu" class="submenu">
+      <a href="{% url 'payment' %}"><i class="fas fa-plus"></i> Add Payment</a>
+      <a href="{% url 'payment_status' %}"><i class="fas fa-eye"></i> View Payment</a>
+    </div>
+
+    <button onclick="toggleMenu('booking-menu')">
+      <i class="fas fa-calendar-check"></i> Booking
+    </button>
+    <div id="booking-menu" class="submenu">
+      <a href="{% url 'total_bookings' %}"><i class="fas fa-list"></i> All Bookings</a>
+      <a href="{% url 'book_cng' %}"><i class="fas fa-gas-pump"></i> Book CNG</a>
+      <a href="{% url 'confirmed_bookings'%}"><i class="fas fa-check-circle"></i> Confirmed Booking</a>
+      <a href="{% url 'completed_bookings' %}"><i class="fas fa-clipboard-check"></i> Completed Booking</a>
+    </div>
+
+    <a href="{% url 'logout' %}" class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <script>
+    function toggleMenu(menuId) {
+      document.querySelectorAll('.submenu').forEach(menu => {
+        if (menu.id !== menuId) menu.style.display = "none";
+      });
+      var submenu = document.getElementById(menuId);
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleSidebar() {
+      var sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("open");
+    }
+  </script>
+
+</body>
+</html>

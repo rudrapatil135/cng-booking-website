@@ -1,0 +1,134 @@
+{% extends 'booking/base.html' %}
+
+{% block content %}
+<div class="card-container">
+    <h2>Add Credit/Debit Card</h2>
+
+    <div class="payment-icons">
+        <p>Accepted Cards</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/RuPay.svg" alt="RuPay">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard">
+    </div>
+    
+    <form id="cardForm">
+        <label>Card Holder Name*</label>
+        <input type="text" id="cardHolder" placeholder="John Doe" required>
+        <span class="error" id="nameError"></span>
+
+        <label>Card Number*</label>
+        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+        <span class="error" id="cardError"></span>
+
+        <label>Expiration Date*</label>
+        <input type="month" id="expDate" name="expDate" required>
+
+        <label>CVV Number*</label>
+        <input type="password" id="cvv" placeholder="123" maxlength="3" required>
+        <span class="error" id="cvvError"></span>
+
+        <button type="submit">Add Card</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("cardForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let name = document.getElementById("cardHolder").value.trim();
+        let cardNumber = document.getElementById("cardNumber").value.replace(/\s/g, '');
+        let cvv = document.getElementById("cvv").value.trim();
+        let expDate = document.getElementById("expDate").value;
+
+        let nameError = document.getElementById("nameError");
+        let cardError = document.getElementById("cardError");
+        let cvvError = document.getElementById("cvvError");
+
+        nameError.textContent = "";
+        cardError.textContent = "";
+        cvvError.textContent = "";
+
+        let isValid = true;
+
+        if (name.length < 3) {
+            nameError.textContent = "Name must be at least 3 characters.";
+            isValid = false;
+        }
+
+        let cardRegex = /^[0-9]{16}$/;
+        if (!cardRegex.test(cardNumber)) {
+            cardError.textContent = "Enter a valid 16-digit card number.";
+            isValid = false;
+        }
+
+        let cvvRegex = /^[0-9]{3}$/;
+        if (!cvvRegex.test(cvv)) {
+            cvvError.textContent = "Enter a valid 3-digit CVV.";
+            isValid = false;
+        }
+
+        if (!expDate) {
+            alert("Please select a valid expiration date.");
+            isValid = false;
+        }
+
+        if (isValid) {
+            alert("Card added successfully!");
+        }
+    });
+
+    document.getElementById("cardNumber").addEventListener("input", function() {
+        let value = this.value.replace(/\D/g, "");
+        value = value.replace(/(\d{4})/g, "$1 ").trim();
+        this.value = value;
+    });
+</script>
+
+<style>
+    .card-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+        margin: 50px auto;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    .payment-icons img {
+        width: 50px;
+        margin: 5px;
+    }
+
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .error {
+        color: red;
+        font-size: 12px;
+        text-align: left;
+    }
+</style>
+{% endblock %}

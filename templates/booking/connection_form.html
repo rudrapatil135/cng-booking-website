@@ -1,0 +1,93 @@
+{% extends 'booking/base.html' %}
+
+{% block title %}Connection Request Form{% endblock %}
+
+{% block content %}
+<div class="card-container">
+    <h2>Connection Request</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="name">Full Name*</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="contact_number">Contact Number*</label>
+        <input type="text" id="contact_number" name="contact_number" required>
+
+        <label for="age">Age*</label>
+        <input type="number" id="age" name="age" required>
+
+        <label for="gender">Gender*</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="address">Address*</label>
+        <textarea id="address" name="address" required></textarea>
+
+        <label for="idproof">ID Proof*</label>
+        <input type="file" id="idproof" name="idproof" required>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<style>
+    .card-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+        margin: 50px auto;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 400px;
+        margin: auto;
+    }
+
+    label {
+        font-weight: bold;
+        text-align: left;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input, select, textarea, button {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+

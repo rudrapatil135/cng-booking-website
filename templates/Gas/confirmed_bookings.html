@@ -1,0 +1,75 @@
+{% extends 'booking/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Confirmed Bookings (Total: {{ total_count }})</h2>
+
+    {% if bookings %}
+    <div class="card shadow-sm p-3">
+        <div class="card-body">
+            <h4 class="text-center text-secondary mb-3">Booking Details</h4>
+
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle custom-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Station</th>
+                            <th>Date</th>
+                            <th>Slot</th>
+                            <th>Status</th>
+                            <th>Fill Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.id }}</td>
+                            <td>{{ booking.user }}</td>
+                            <td>{{ booking.station }}</td>
+                            <td>{{ booking.date }}</td>
+                            <td>{{ booking.slot }}</td>
+                            <td>
+                                <span class="badge bg-success">Confirmed</span>
+                            </td>
+                            <td>
+                                {% if booking.fill_status == "filled" %}
+                                    <span class="badge bg-success">✅ Filled</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">⏳ Pending</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-center text-muted">No confirmed bookings available.</p>
+    {% endif %}
+</div>
+
+<style>
+    .custom-table {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+    }
+    .custom-table th, .custom-table td {
+        border: 1px solid #dee2e6;
+        padding: 12px;
+    }
+    .custom-table th {
+        background-color: #343a40;
+        color: white;
+        font-weight: bold;
+    }
+    .custom-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
