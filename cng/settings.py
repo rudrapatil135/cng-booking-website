@@ -20,13 +20,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-import os
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-4@f#p*9q1b7s(1@#randomfallbackkey1234567890'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ['cng-booking-website.onrender.com']
+DEBUG = True
+ALLOWED_HOSTS = ['cng-booking-website.onrender.com', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
